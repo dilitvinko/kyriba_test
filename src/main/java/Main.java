@@ -16,62 +16,55 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
 
   public static void main(String[] args) {
-//    try (BufferedReader bufferedReader = new BufferedReader(new FileReader("file.txt"));
-////        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("file.txt"))
-//    ) {
-//
-////      bufferedWriter.write(String.valueOf(LocalDateTime.now()) + " qawe" + " advssdklld"+"\n");
-////      bufferedWriter.write(String.valueOf(LocalDateTime.now()) + " asdzqawe" + " |Vasdfsdklld"+"\n");
-////      bufferedWriter.write(String.valueOf(LocalDateTime.now()) + " qaxzcvweas" + " fdasfasdklld"+"\n");
-////      bufferedWriter.write(String.valueOf(LocalDateTime.now()) + " ASWDqdsvawe" + " asdvasdfklld"+"\n");
-////      bufferedWriter.close();
-//
-//      String line;
-//      while ((line = bufferedReader.readLine()) != null) {
-//        String data[] = line.split(" ");
-//        System.out.println(line);
-//        LocalDateTime localDateTime = LocalDateTime.parse(data[0]);
-//        System.out.println(data[0] + " - " + localDateTime.toString());
-//        System.out.println(data[1]);
-//        System.out.println(data[2]);
-//        System.out.println();
-//      }
-//
-//      System.out.println();
-//
-//      List<String> stringList = new ArrayList<>();
-//      stringList.add("asd sdf");
-//      stringList.add("1asd sdf");
-//      stringList.add("232323 2asd ");
-//      stringList.add("3asd dsfsdf sdf s f");
-//
-//      List<TestClass> list = stringList.stream().map(str -> new TestClass(str.split(" ")[0]))
-//          .collect(Collectors.toList());
-//      System.out.println(list);
-//
-//
-//    } catch (FileNotFoundException e) {
-//      e.printStackTrace();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
+    final String DELIMETER = " --- ";
 
+
+    Path pathes = Paths.get("logsDir/");
+    Stream<String> lineStream1 = null;
+    List<String> a = new ArrayList<>();
+    List<CustomLog> test = new ArrayList<>();
+
+    try (Stream<Path> paths = Files.walk(pathes)){
+      test = paths
+          .filter(Files::isRegularFile)
+          .flatMap(p -> {
+            try {
+              return Files.lines(p);
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+            return null;
+          }).map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
+          .filter(new CustomPredicate("Dima")).collect(Collectors.toList());
+//          .forEach(System.out::println);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+      test.size();
+
+
+    //TODO Бюлдера сделать и интерфейс прописать. И в зависимости от фильтра нужное бюлдить
 
     Path path = Paths.get("file.txt");
 
     LocalDateTime localDateTime1 = LocalDateTime.parse("2019-12-12T10:39:23");
     LocalDateTime localDateTime2 = LocalDateTime.parse("2019-12-12T20:39:23");
 
+    Predicate<CustomLog> nameDima = p -> p.getUserName().equals("Dima");
+
+    String str = "Dima";
+
     try (Stream<String> lineStream = Files.lines(path)) {
       List<CustomLog> listLog = lineStream
-          .map(line -> new CustomLog(line.split(" --- ")[0], line.split(" --- ")[1], line.split(" --- ")[2]))
-//          .filter(log -> log.getUserName().equals("qaxzcvweas"))
+          .map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
+          .filter(new CustomPredicate(str))
 //          .filter(log -> log.getDateTime().isAfter(localDateTime1)&&log.getDateTime().isBefore(localDateTime2))
 //          .filter(log -> log.getMessage().contains("hello"))
           .collect(Collectors.toList());
@@ -118,7 +111,16 @@ public class Main {
     } catch (IOException ignored) {
     }
 
+    System.out.println("Choose filters:");
+    System.out.println("1. User name:");
+    System.out.println("2. Start date and time (format - ):");
+    System.out.println("3. End date and time (format - ):");
+    System.out.println("4. Consist Words in message (format - ):");
 
+    System.out.println("5. Grouping by userName? (Y/N)");
+    System.out.println("6. Grouping by time unit? (N/SECOND/MINUTE/HOUR/DAY/MONTH/YEAR)");
+
+    System.out.println("7. Path or filename to output file: ");
 
 
   }
