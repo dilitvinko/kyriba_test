@@ -1,25 +1,12 @@
-import static java.time.temporal.ChronoUnit.DAYS;
-
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,10 +24,10 @@ public class Main {
     Path pathes = Paths.get("logsDir/");
     Stream<String> lineStream1 = null;
     List<String> a = new ArrayList<>();
-    final List<CustomLog> test = new CopyOnWriteArrayList<>(new ArrayList<>());
+    final List<CustomLog> listLogsAfterFilter = new CopyOnWriteArrayList<>(new ArrayList<>());
 
 //    try (Stream<Path> paths = Files.walk(pathes)){
-//      test = paths
+//      listLogsAfterFilter = paths
 //          .filter(Files::isRegularFile)
 //          .flatMap(p -> {
 //            try {
@@ -55,7 +42,7 @@ public class Main {
 //    } catch (IOException e) {
 //      e.printStackTrace();
 //    }
-//      test.size();
+//      listLogsAfterFilter.size();
 
 
 
@@ -67,8 +54,8 @@ public class Main {
           .filter(path -> path.getFileName().toString().endsWith(".txt"))
           .forEach(pathFile -> service.execute(() -> {
                 try (Stream<String> lineStream = Files.lines(pathFile)) {
-                  test.addAll(lineStream.map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
-                      .filter(log -> log.getUserName().equals("Dima"))
+                  listLogsAfterFilter.addAll(lineStream.map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
+                      .filter(log -> true)
                       .collect(Collectors.toList()));
                       //.forEach(log -> System.out.println("Поток: " + Thread.currentThread().getName() + ". Файл: " + pathFile.toString() + ". LOG: " + log));
 
@@ -92,7 +79,7 @@ public class Main {
       e.printStackTrace();
     }
 
-    System.out.println(test.size());
+    System.out.println(listLogsAfterFilter.size());
 
 
     Path path = Paths.get("file.txt");
@@ -105,15 +92,6 @@ public class Main {
     Predicate<CustomLog> wordsConsistPredicate = customLog -> true;
     Predicate<CustomLog> wordsConsistPredicate123 = userNamePredicate.and(dateTimePredicate);
 
-    String str = "Dima";
-
-    try (Stream<String> lineStream = Files.lines(path)) {
-      List<CustomLog> listLog = lineStream
-          .map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
-          .filter(userNamePredicate.and(dateTimePredicate).and(wordsConsistPredicate))
-          .collect(Collectors.toList());
-
-      Stream<CustomLog> logStream = listLog.stream();
 // Группировка по ЮзерНэйм
 //      Map<String, Long> logByUserName = logStream.collect(
 //          Collectors.groupingBy(CustomLog::getUserName, Collectors.counting()));
@@ -123,54 +101,55 @@ public class Main {
 //        System.out.println(item.getKey() + " - " + item.getValue());
 //      }
 //      Группировка по дате
-//      Map<LocalDateTime, List<CustomLog>> logByDate = listLog.stream()
+//      Map<LocalDateTime, Long> logByDate = listLogsAfterFilter.stream()
 //          .collect(Collectors.groupingBy(e ->
-//          LocalDateTime.from(e.getDateTime().truncatedTo(ChronoUnit.DAYS)))
+//          LocalDateTime.from(e.getDateTime().truncatedTo(ChronoUnit.DAYS)), Collectors.counting())
 //      );
 //
-//      for(Map.Entry<LocalDateTime, List<CustomLog>> item : logByDate.entrySet()){
+//      for(Map.Entry<LocalDateTime, Long> item : logByDate.entrySet()){
 //
-//        System.out.println(item.getKey() + " - " + item.getValue().size());
+//        System.out.println(item.getKey() + " - " + item.getValue());
 //      }
 //      Группировка по юзернэйм и дате
 
-      Map<LocalDateTime, List<CustomLog>> logByDate = listLog.stream()
-          .collect(Collectors.groupingBy(e ->
-              LocalDateTime.from(e.getDateTime().truncatedTo(ChronoUnit.DAYS)))
-          );
-
-      for(Map.Entry<LocalDateTime, List<CustomLog>> item : logByDate.entrySet()){
-
-        System.out.println(item.getKey() + " - ");
-        Map<String, Long> logByUserName = item.getValue().stream().collect(
-            Collectors.groupingBy(CustomLog::getUserName, Collectors.counting()));
-
-        for(Map.Entry<String, Long> item1 : logByUserName.entrySet()){
-
-          System.out.println(item1.getKey() + " - " + item1.getValue());
-        }
-      }
-
-
-    } catch (IOException ignored) {
-    }
-
-
-
-
+//      Map<LocalDateTime, List<CustomLog>> logByDateAndUser = listLogsAfterFilter.stream()
+//          .collect(Collectors.groupingBy(e ->
+//              LocalDateTime.from(e.getDateTime().truncatedTo(ChronoUnit.DAYS)))
+//          );
+//
+//      for(Map.Entry<LocalDateTime, List<CustomLog>> item : logByDateAndUser.entrySet()){
+//
+//        System.out.println(item.getKey());
+//        Map<String, Long> logByUserName = item.getValue().stream().collect(
+//            Collectors.groupingBy(CustomLog::getUserName, Collectors.counting()));
+//
+//        for(Map.Entry<String, Long> item1 : logByUserName.entrySet()){
+//
+//          System.out.println(item1.getKey() + " - " + item1.getValue());
+//        }
+//        System.out.println();
+//      }
 
 
 
     ConsoleReader reader = new ConsoleReader();
-    reader.read();
-    CustomPredicate.createPredicate(reader);
+//    reader.readForPredicate();
+//    reader.readForGrouping();
+    //reader.readForThreads();
+    //CustomPredicate.createPredicate(reader);
+    //read to list logs using predicate
+    List<String> list = CustomGrouper.groupByTimeUnitAndUserName(listLogsAfterFilter, ChronoUnit.DAYS);
+    CustomWriter.writeInFile("log.txt" , list);
+    CustomGrouper.groupBy(reader);
+    //CustomGrouper.groupByUserName(listLogsAfterFilter);
 
 
 
 
 
-    System.out.println("4. Grouping by userName? (Y/N)");
-    System.out.println("5. Grouping by time unit? (N/SECOND/MINUTE/HOUR/DAY/MONTH/YEAR)");
+
+
+
 
     System.out.println("5. Count of threads used to process files ");
     System.out.println("7. Path or filename to output file: ");

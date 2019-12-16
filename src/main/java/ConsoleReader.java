@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
 public class ConsoleReader {
@@ -10,6 +11,8 @@ public class ConsoleReader {
   private LocalDateTime startDateTime;
   private LocalDateTime endDateTime;
   private String wordsContain;
+  private String groupByUserName;
+  private ChronoUnit groupByTimeUnit;
 
   private boolean hasReadUserName(){
     System.out.println("Choose filters:");
@@ -26,11 +29,21 @@ public class ConsoleReader {
     return filterUserName.toUpperCase().equals("Y");
   }
 
-  private static boolean isValidDateTime(String str){
+  private static boolean isValidDateTime(String dateTime){
     try {
-      LocalDateTime.parse(str);
+      LocalDateTime.parse(dateTime);
     } catch (DateTimeParseException e) {
       System.out.println("Incorrect date format. Try again!");
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean isValidTimeUnit(String timeUnit){
+    try {
+      ChronoUnit.valueOf(timeUnit.toUpperCase());
+    } catch (IllegalArgumentException e) {
+      System.out.println("Incorrect unit time format. Try again!");
       return false;
     }
     return true;
@@ -42,6 +55,7 @@ public class ConsoleReader {
       System.out.println("2.1. By start time period? (Y/N):");
       filterStartTimePeriod = in.nextLine();
     }
+
     if (filterStartTimePeriod.toUpperCase().equals("Y")) {
       String startTime;
       do  {
@@ -60,8 +74,8 @@ public class ConsoleReader {
       System.out.println("2.2. By end time period? (Y/N):");
       filterEndTimePeriod = in.nextLine();
     }
-    if (filterEndTimePeriod.toUpperCase().equals("Y")) {
 
+    if (filterEndTimePeriod.toUpperCase().equals("Y")) {
       String endTime;
       do  {
         System.out.println("2.2. End dateTimePredicate and time (yyyy-mm-ddThh:mm:ss):");
@@ -88,7 +102,39 @@ public class ConsoleReader {
     return filterContainWord.toUpperCase().equals("Y");
   }
 
-  public void read(){
+  private boolean hasReadGroupingByUserName(){
+    String groupingByUserName = "";
+    while ( !(groupingByUserName.toUpperCase().equals("Y") || groupingByUserName.toUpperCase().equals("N"))) {
+      System.out.println("4. Group by userName? (Y/N)");
+      groupingByUserName = in.nextLine();
+    }
+
+    groupByUserName = groupingByUserName;
+
+    return groupingByUserName.toUpperCase().equals("Y");
+  }
+
+  private boolean hasReadGroupingByTimeUnit(){
+    String groupingByTimeUnit = "";
+    while ( !(groupingByTimeUnit.toUpperCase().equals("Y") || groupingByTimeUnit.toUpperCase().equals("N"))) {
+      System.out.println("5. Grouping by time unit? (Y/N):");
+      groupingByTimeUnit = in.nextLine();
+    }
+
+    if (groupingByTimeUnit.toUpperCase().equals("Y")) {
+      String timeUnit;
+      do {
+        System.out.println("5.1. Time Unit (SECONDS/MINUTES/HOURS/DAYS/MONTHS/YEARS ... and so on):");
+        timeUnit = in.nextLine();
+      } while (!isValidTimeUnit(timeUnit));
+
+      groupByTimeUnit = ChronoUnit.valueOf(timeUnit.toUpperCase());
+    }
+
+    return groupingByTimeUnit.toUpperCase().equals("Y");
+  }
+
+  public void readForPredicate(){
     while ( !(hasReadUserName() |
         hasReadStartDateTime() |
         hasReadEndDateTime() |
@@ -98,6 +144,17 @@ public class ConsoleReader {
     }
     System.out.println("Filter Parameters: " + userName + " " + startDateTime + " " + endDateTime + " " + wordsContain);
   }
+
+  public void readForGrouping(){
+    while ( !(hasReadGroupingByUserName() |
+        hasReadGroupingByTimeUnit())
+    ){
+      System.out.println("Please select at least one parameter ");
+    }
+    System.out.println("Group Parameters: " + groupByUserName + " " + groupByTimeUnit );
+
+  }
+
 
   public String getUserName() {
     return userName;
