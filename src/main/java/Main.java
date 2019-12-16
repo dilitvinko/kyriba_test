@@ -1,21 +1,29 @@
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,44 +37,80 @@ public class Main {
     Path pathes = Paths.get("logsDir/");
     Stream<String> lineStream1 = null;
     List<String> a = new ArrayList<>();
-    List<CustomLog> test = new ArrayList<>();
+    final List<CustomLog> test = new CopyOnWriteArrayList<>(new ArrayList<>());
 
-    try (Stream<Path> paths = Files.walk(pathes)){
-      test = paths
+//    try (Stream<Path> paths = Files.walk(pathes)){
+//      test = paths
+//          .filter(Files::isRegularFile)
+//          .flatMap(p -> {
+//            try {
+//              return Files.lines(p);
+//            } catch (IOException e) {
+//              e.printStackTrace();
+//            }
+//            return null;
+//          }).map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
+//          .filter(p -> p.getUserName().equals("Dima"))
+//          .collect(Collectors.toList());
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+//      test.size();
+
+
+
+    ExecutorService service = Executors.newFixedThreadPool(2);
+
+    try (Stream<Path> pathStream = Files.walk(pathes)){
+      pathStream
           .filter(Files::isRegularFile)
-          .flatMap(p -> {
-            try {
-              return Files.lines(p);
+          .filter(path -> path.getFileName().toString().endsWith(".txt"))
+          .forEach(pathFile -> service.execute(() -> {
+                try (Stream<String> lineStream = Files.lines(pathFile)) {
+                  test.addAll(lineStream.map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
+                      .filter(log -> log.getUserName().equals("Dima"))
+                      .collect(Collectors.toList()));
+                      //.forEach(log -> System.out.println("Поток: " + Thread.currentThread().getName() + ". Файл: " + pathFile.toString() + ". LOG: " + log));
+
+                } catch (FileNotFoundException e) {
+              e.printStackTrace();
             } catch (IOException e) {
               e.printStackTrace();
             }
-            return null;
-          }).map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
-          .filter(new CustomPredicate("Dima")).collect(Collectors.toList());
-//          .forEach(System.out::println);
+          })
+
+          );
     } catch (IOException e) {
       e.printStackTrace();
     }
-      test.size();
+    // Новые задачи более не принимаем, выполняем только оставшиеся.
+    service.shutdown();
+    // Ждем завершения выполнения потоков не более 10 минут.
+    try {
+      service.awaitTermination(10, TimeUnit.MINUTES);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
 
+    System.out.println(test.size());
 
-    //TODO Бюлдера сделать и интерфейс прописать. И в зависимости от фильтра нужное бюлдить
 
     Path path = Paths.get("file.txt");
 
     LocalDateTime localDateTime1 = LocalDateTime.parse("2019-12-12T10:39:23");
     LocalDateTime localDateTime2 = LocalDateTime.parse("2019-12-12T20:39:23");
 
-    Predicate<CustomLog> nameDima = p -> p.getUserName().equals("Dima");
+    Predicate<CustomLog> userNamePredicate = customLog -> true;
+    Predicate<CustomLog> dateTimePredicate = customLog -> true;
+    Predicate<CustomLog> wordsConsistPredicate = customLog -> true;
+    Predicate<CustomLog> wordsConsistPredicate123 = userNamePredicate.and(dateTimePredicate);
 
     String str = "Dima";
 
     try (Stream<String> lineStream = Files.lines(path)) {
       List<CustomLog> listLog = lineStream
           .map(line -> new CustomLog(line.split(DELIMETER)[0], line.split(DELIMETER)[1], line.split(DELIMETER)[2]))
-          .filter(new CustomPredicate(str))
-//          .filter(log -> log.getDateTime().isAfter(localDateTime1)&&log.getDateTime().isBefore(localDateTime2))
-//          .filter(log -> log.getMessage().contains("hello"))
+          .filter(userNamePredicate.and(dateTimePredicate).and(wordsConsistPredicate))
           .collect(Collectors.toList());
 
       Stream<CustomLog> logStream = listLog.stream();
@@ -111,19 +155,29 @@ public class Main {
     } catch (IOException ignored) {
     }
 
-    System.out.println("Choose filters:");
-    System.out.println("1. User name:");
-    System.out.println("2. Start date and time (format - ):");
-    System.out.println("3. End date and time (format - ):");
-    System.out.println("4. Consist Words in message (format - ):");
 
-    System.out.println("5. Grouping by userName? (Y/N)");
-    System.out.println("6. Grouping by time unit? (N/SECOND/MINUTE/HOUR/DAY/MONTH/YEAR)");
 
+
+
+
+
+    ConsoleReader reader = new ConsoleReader();
+    reader.read();
+    CustomPredicate.createPredicate(reader);
+
+
+
+
+
+    System.out.println("4. Grouping by userName? (Y/N)");
+    System.out.println("5. Grouping by time unit? (N/SECOND/MINUTE/HOUR/DAY/MONTH/YEAR)");
+
+    System.out.println("5. Count of threads used to process files ");
     System.out.println("7. Path or filename to output file: ");
 
-
   }
+
+
 
 }
 

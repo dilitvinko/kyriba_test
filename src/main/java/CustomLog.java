@@ -37,4 +37,14 @@ public class CustomLog {
   public void setMessage(String message) {
     this.message = message;
   }
+
+
+  @Override
+  public String toString() {
+    return "CustomLog{" +
+        "dateTime=" + dateTime +
+        ", userName='" + userName + '\'' +
+        ", message='" + message + '\'' +
+        '}';
+  }
 }
