@@ -1,0 +1,61 @@
+2019-12-11T15:00
+qaxzcvweas - 5
+Dima - 5
+
+
+2019-12-12T15:00
+Dima - 5
+ASWDqdsvawe - 5
+
+
+2019-12-13T15:00
+qaxzcvweas - 10
+Dima - 5
+Vova - 10
+
+
+Log{dateTime=2019-12-13T15:39:23, userName='Dima', message='advssdklldasd'}
+Log{dateTime=2019-12-11T15:39:23, userName='Dima', message='|Vasdfsdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='hello my dear girl'}
+Log{dateTime=2019-12-12T15:39:23, userName='ASWDqdsvawe', message='asdvasdfklldzv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='fdasfasdklldvv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldvz\'}
+Log{dateTime=2019-12-11T15:39:23, userName='qaxzcvweas', message='fdasfasdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldxv'}
+Log{dateTime=2019-12-12T15:39:23, userName='Dima', message='advssdklldadasd'}
+Log{dateTime=2019-12-13T15:39:23, userName='Dima', message='advssdklldasd'}
+Log{dateTime=2019-12-11T15:39:23, userName='Dima', message='|Vasdfsdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='hello my dear girl'}
+Log{dateTime=2019-12-12T15:39:23, userName='ASWDqdsvawe', message='asdvasdfklldzv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='fdasfasdklldvv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldvz\'}
+Log{dateTime=2019-12-11T15:39:23, userName='qaxzcvweas', message='fdasfasdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldxv'}
+Log{dateTime=2019-12-12T15:39:23, userName='Dima', message='advssdklldadasd'}
+Log{dateTime=2019-12-13T15:39:23, userName='Dima', message='advssdklldasd'}
+Log{dateTime=2019-12-11T15:39:23, userName='Dima', message='|Vasdfsdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='hello my dear girl'}
+Log{dateTime=2019-12-12T15:39:23, userName='ASWDqdsvawe', message='asdvasdfklldzv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='fdasfasdklldvv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldvz\'}
+Log{dateTime=2019-12-11T15:39:23, userName='qaxzcvweas', message='fdasfasdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldxv'}
+Log{dateTime=2019-12-12T15:39:23, userName='Dima', message='advssdklldadasd'}
+Log{dateTime=2019-12-13T15:39:23, userName='Dima', message='advssdklldasd'}
+Log{dateTime=2019-12-11T15:39:23, userName='Dima', message='|Vasdfsdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='hello my dear girl'}
+Log{dateTime=2019-12-12T15:39:23, userName='ASWDqdsvawe', message='asdvasdfklldzv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='fdasfasdklldvv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldvz\'}
+Log{dateTime=2019-12-11T15:39:23, userName='qaxzcvweas', message='fdasfasdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldxv'}
+Log{dateTime=2019-12-12T15:39:23, userName='Dima', message='advssdklldadasd'}
+Log{dateTime=2019-12-13T15:39:23, userName='Dima', message='advssdklldasd'}
+Log{dateTime=2019-12-11T15:39:23, userName='Dima', message='|Vasdfsdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='hello my dear girl'}
+Log{dateTime=2019-12-12T15:39:23, userName='ASWDqdsvawe', message='asdvasdfklldzv'}
+Log{dateTime=2019-12-13T15:39:23, userName='qaxzcvweas', message='fdasfasdklldvv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldvz\'}
+Log{dateTime=2019-12-11T15:39:23, userName='qaxzcvweas', message='fdasfasdklldv'}
+Log{dateTime=2019-12-13T15:39:23, userName='Vova', message='fdasfasdklldxv'}
+Log{dateTime=2019-12-12T15:39:23, userName='Dima', message='advssdklldadasd'}
